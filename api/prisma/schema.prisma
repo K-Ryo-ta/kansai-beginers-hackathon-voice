@@ -1,5 +1,6 @@
 datasource db {
     // could be postgresql or mysql
+    //TODO:環境変数に変える
     provider = "mysql"
     url      = "mysql://root:ryotasql@localhost:3306/kansai"
 }
