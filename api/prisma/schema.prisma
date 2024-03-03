@@ -1,0 +1,15 @@
+datasource db {
+    // could be postgresql or mysql
+    provider = "mysql"
+    url      = "mysql://root:ryotasql@localhost:3306/kansai"
+}
+
+generator client {
+    provider             = "prisma-client-py"
+    recursive_type_depth = 5
+}
+
+model Test_table {
+    id   Int    @id @default(autoincrement())
+    name String
+}

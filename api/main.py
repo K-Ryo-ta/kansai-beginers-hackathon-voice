@@ -2,14 +2,25 @@ from typing import Union
 
 from fastapi import FastAPI
 
+from prisma import Prisma
+
 app = FastAPI()
 
-
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
+async def read_root():
+    db = Prisma()
+    await db.connect()
+
+    found = await db.test_table.find_many(
+        where={
+        'name': "ryota",
+    },
+)
+
+    await db.disconnect()
+    return {"Hello": found}
 
 
 @app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
+async def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
