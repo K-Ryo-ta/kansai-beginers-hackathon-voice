@@ -2,7 +2,7 @@ datasource db {
     // could be postgresql or mysql
     //TODO:環境変数に変える
     provider = "mysql"
-    url      = "mysql://root:ryotasql@localhost:3306/kansai"
+    url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -13,4 +13,65 @@ generator client {
 model Test_table {
     id   Int    @id @default(autoincrement())
     name String
+}
+
+model User {
+    id String @id @default(uuid())
+
+    email       String       @unique
+    password    String
+    name        String
+    videos      Video[]
+    evaluations Evaluation[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Video {
+    id String @id @default(uuid())
+
+    title       String
+    description String
+    url         String
+    thumbnail   String
+    user        User         @relation(fields: [userId], references: [id])
+    userId      String
+    theme       Theme        @relation(fields: [themeId], references: [id])
+    themeId     String
+    evaluations Evaluation[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Theme {
+    id String @id @default(uuid())
+
+    title       String
+    description String
+    startDate   DateTime
+    endDate     DateTime
+    videos      Video[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Evaluation {
+    id String @id @default(uuid())
+
+    user    User   @relation(fields: [userId], references: [id])
+    userId  String
+    video   Video  @relation(fields: [videoId], references: [id])
+    videoId String
+
+    fit               Int
+    creativity        Int
+    comprehensibility Int
+    moved             Int
+    editing           Int
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
