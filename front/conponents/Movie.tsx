@@ -25,7 +25,7 @@ const Movie = () => {
   };
 
   return (
-    <div className='border'>
+    <div className='border max-height w-7/10'>
       <h1>Movie appload</h1>
       <input type="file" accept="video/*" onChange={handleFileChange} />
       <button onClick={handleUpload}>アップロード</button>
