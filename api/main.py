@@ -68,7 +68,11 @@ async def read_root():
         }
     )
 
-    userfound = await db.user.find_many()
+    userfound = await db.user.find_many(
+        include={
+            "videos": True
+        }
+    )
     videofound = await db.video.find_many(
         include={
             'user': True,
@@ -94,7 +98,8 @@ async def read_root():
     "Users": userfound, 
     "Videos": videofound, 
     "Themes": themefound, 
-    "Evaluations": evaluationfound
+    "Evaluations": evaluationfound,
+    # "QQQ":"aaa"
 }
 
 
