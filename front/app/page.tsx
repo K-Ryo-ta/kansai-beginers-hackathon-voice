@@ -14,7 +14,6 @@ import Image from "next/image";
 //     // This will activate the closest `error.js` Error Boundary
 //     throw new Error('Failed to fetch data')
 //   }
-
 //   return res.json()
 // }
 
@@ -22,10 +21,12 @@ export default async function Home() {
   // const data = await getData()
   // console.log(data)
   return (
-    <main className="flex flex-col items-center justify-between">
-      <div className="flex w-[0vh] h-[70vh]">
+    <main className="flex flex-col items-center justify-between">      
+      <div className="w-full">
           <Viewer />
           <Sidebar />
+        <h1 className="text-6xl font-bold text-primary">Hello, World!</h1>
+        <p className="text-2xl text-secondary">This is a Next.js app with Tailwind CSS</p>
       </div>
     </main>
   );

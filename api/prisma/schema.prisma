@@ -1,7 +1,7 @@
 datasource db {
     // could be postgresql or mysql
     //TODO:環境変数に変える
-    provider = "mysql"
+    provider = "sqlite"
     url      = env("DATABASE_URL")
 }
 
