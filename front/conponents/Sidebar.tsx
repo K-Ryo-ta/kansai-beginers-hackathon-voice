@@ -10,15 +10,15 @@ const Sidebar = () => {
 const ScreenPath = "/profile"
 
   return (
-    <div className='border h-[70vh] w-[10vh] mt-auto mb-auto'>
+    <div className='inline-flex flex-col border h-[70vh] w-[10vh] mt-{20vh} w-7/10'>
       
     
     <Link href={ScreenPath} passHref className="background-color: rgb(100 116 139)">
-        <img src="/images/profile.svg" className='h-[7vh]'/>
+        <img src="/images/myReport.svg" className='h-[7vh]'/>
     </Link>
     
       <Drawer>
-      <DrawerTrigger><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="black"/></svg>
+      <DrawerTrigger><img src='/images/addMovie.svg' className='h-[7vh]'></img>
 </DrawerTrigger>
         <DrawerContent>
          <DrawerHeader>
