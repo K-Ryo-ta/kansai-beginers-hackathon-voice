@@ -3,6 +3,24 @@ import Link from 'next/link';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { Button } from "@/components/ui/button";
 import Movie from './Movie';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { Slider } from '@/components/ui/slider';
+import { cn } from "@/lib/utils"
+import MyComponent from '../components/ui/CustomSlider';
+
+
+type SidebarProps = {
+  // 他のプロパティを定義
+  className?: string; // className をオプショナルプロパティとして追加
+  // ...
+};
 
 
 const Sidebar = () => {
@@ -16,7 +34,7 @@ const ScreenPath = "/profile"
     <Link href={ScreenPath} passHref className="background-color: rgb(100 116 139)">
         <img src="/images/myReport.svg" className='h-[7vh]'/>
     </Link>
-    
+    {/* ドロワーのとこ */}
       <Drawer>
       <DrawerTrigger><img src='/images/addMovie.svg' className='h-[7vh]'></img>
 </DrawerTrigger>
@@ -34,7 +52,38 @@ const ScreenPath = "/profile"
         </DrawerFooter>
         </DrawerContent>
       </Drawer>
-
+    {/* シートのやつ */}
+      <Sheet>
+     <SheetTrigger> <img src="/images/Scoring.svg" className='h-[7vh]'/></SheetTrigger>
+      <SheetContent>
+       <SheetHeader>
+       <SheetTitle>あなたの思うような点数を</SheetTitle>
+         <SheetDescription>
+         Fit  
+         </SheetDescription>
+         
+          
+         < MyComponent/>
+         
+         <SheetDescription>
+         Creativity
+         </SheetDescription>
+         < MyComponent/>
+         <SheetDescription>
+         Comprehensibility
+         </SheetDescription>
+         < MyComponent/>
+         <SheetDescription>
+         Moved Editing
+         </SheetDescription>
+         < MyComponent/>
+         <SheetDescription>
+         Editing
+         </SheetDescription>
+         < MyComponent/>
+         </SheetHeader>
+       </SheetContent>
+    </Sheet>
 
     
  </div>
