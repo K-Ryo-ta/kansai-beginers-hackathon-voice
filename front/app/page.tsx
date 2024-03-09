@@ -21,12 +21,15 @@ export default async function Home() {
   // const data = await getData()
   // console.log(data)
   return (
-    <main className="flex flex-col items-center justify-between">      
-      <div className="w-full">
+    <main className="flex flex-col h-[80vh] border-t">      
+      <div className="flex mx-auto h-[80vh]  ">
+        <div className="w-1/6 "></div>
+        <div className = "w-4/6 text-center">
           <Viewer />
+        </div>
+        <div className = "w-1/6 text-right">
           <Sidebar />
-        <h1 className="text-6xl font-bold text-primary">Hello, World!</h1>
-        <p className="text-2xl text-secondary">This is a Next.js app with Tailwind CSS</p>
+        </div>
       </div>
     </main>
   );

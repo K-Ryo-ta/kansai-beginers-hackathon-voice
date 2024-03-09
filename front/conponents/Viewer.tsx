@@ -34,10 +34,10 @@ const VideoViewer: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className = 'h-[60vh] ml-[20vh]'>
       {videos.length > 0 && (
-        <div>
-          <video key={videos[currentVideoIndex].id} controls autoPlay muted>
+        <div className='h-[60vh]'>
+          <video key={videos[currentVideoIndex].id} controls autoPlay muted className="h-[80vh] mx-auto" >
             <source src={videos[currentVideoIndex].url} type="video/mp4" />
             お使いのブラウザはビデオタグをサポートしていません。
           </video>
@@ -47,5 +47,4 @@ const VideoViewer: React.FC = () => {
     </div>
   );
 };
-
 export default VideoViewer;
