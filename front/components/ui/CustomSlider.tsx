@@ -1,25 +1,29 @@
 "use client"
 
-import * as React from 'react';
+import React from 'react';
 import { Slider } from '@/components/ui/slider';
 
-const MyComponent: React.FC = () => {
-  const [sliderValue, setSliderValue] = React.useState<number[]>([5]); // スライダーの値を保持する状態
+interface MyComponentProps {
+  label: string;
+  onSliderChange: (value: number) => void; // 外部から渡されるコールバック関数
+}
 
-  // スライダーの値が変更されたときに呼び出されるコールバック関数
+const MyComponent: React.FC<MyComponentProps> = ({ label, onSliderChange }) => {
+  const [sliderValue, setSliderValue] = React.useState<number[]>([50]);
+
   const handleSliderChange = (newValue: number[]) => {
-    setSliderValue(newValue); // スライダーの値を更新
+    setSliderValue(newValue);
+    onSliderChange(newValue[0]); // 外部のコールバック関数を呼び出す
   };
 
   return (
     <div>
-      {/* スライダーコンポーネントをレンダリング */}
       <Slider value={sliderValue} onValueChange={handleSliderChange} />
-
-      {/* スライダーの現在の値を表示 */}
-      <p>現在のスライダーの位置: {sliderValue}</p>
+      <p>Point: {sliderValue}</p>
     </div>
   );
 };
 
 export default MyComponent;
+
+

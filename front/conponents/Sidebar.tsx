@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
@@ -14,6 +15,9 @@ import {
 import { Slider } from '@/components/ui/slider';
 import { cn } from "@/lib/utils"
 import MyComponent from '../components/ui/CustomSlider';
+import ParentComponent from './ParentSlider';
+import ParentArray from './ParentArray';
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog';
 
 
 type SidebarProps = {
@@ -32,11 +36,11 @@ const ScreenPath = "/profile"
       
     
     <Link href={ScreenPath} passHref className="background-color: rgb(100 116 139)">
-        <img src="/images/myReport.svg" className='h-[7vh]'/>
+        <img src="/images/myReport.svg" className='h-[10vh]'/>
     </Link>
     {/* ドロワーのとこ */}
       <Drawer>
-      <DrawerTrigger><img src='/images/addMovie.svg' className='h-[7vh]'></img>
+      <DrawerTrigger><img src='/images/addMovie.svg' className='h-[10vh]'></img>
 </DrawerTrigger>
         <DrawerContent>
          <DrawerHeader>
@@ -53,7 +57,7 @@ const ScreenPath = "/profile"
         </DrawerContent>
       </Drawer>
     {/* シートのやつ */}
-      <Sheet>
+      {/* <Sheet>
      <SheetTrigger> <img src="/images/Scoring.svg" className='h-[7vh]'/></SheetTrigger>
       <SheetContent>
        <SheetHeader>
@@ -61,30 +65,62 @@ const ScreenPath = "/profile"
          <SheetDescription>
          Fit  
          </SheetDescription>
-         
-          
-         < MyComponent/>
-         
+         < MyComponent label="fit" onSliderChange={function (value: number): void {
+              throw new Error('Function not implemented.');
+            } }/>
          <SheetDescription>
          Creativity
          </SheetDescription>
-         < MyComponent/>
+         < MyComponent label="Creativity" onSliderChange={function (value: number): void {
+              throw new Error('Function not implemented.');
+            } }/>
          <SheetDescription>
          Comprehensibility
          </SheetDescription>
-         < MyComponent/>
+         < MyComponent label="Comprehensivility" onSliderChange={function (value: number): void {
+              throw new Error('Function not implemented.');
+            } }/>
          <SheetDescription>
-         Moved Editing
+         Moved 
          </SheetDescription>
-         < MyComponent/>
+         < MyComponent label="Moved" onSliderChange={function (value: number): void {
+              throw new Error('Function not implemented.');
+            } }/>
          <SheetDescription>
          Editing
          </SheetDescription>
-         < MyComponent/>
+         < MyComponent label="Editing" onSliderChange={function (value: number): void {
+              throw new Error('Function not implemented.');
+            } }/>
          </SheetHeader>
        </SheetContent>
+    </Sheet> */}
+           <Sheet>
+     <SheetTrigger> <img src="/images/Scoring.svg" className='h-[10vh]'/></SheetTrigger>
+      <SheetContent>
+       <SheetHeader>
+       <SheetTitle>evaluation</SheetTitle>
+       </SheetHeader>
+       <ParentArray />
+       <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="outline">Show Dialog</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>注意※一つの動画につき採点を送れるのは1度だけです</AlertDialogTitle>
+          <AlertDialogDescription>
+            本当に採点情報を送りますか？
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction>Send</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+       </SheetContent>
     </Sheet>
-
     
  </div>
   )
