@@ -41,18 +41,38 @@ const Movie = () => {
   };
 
   return (
-    <div className='border max-height w-7/10'>
-      <h1>Movie appload</h1>
-      <input type="file" accept="video/*" onChange={handleFileChange} />
-      <button onClick={handleUpload}>アップロード</button>
+    <div className="border shadow-lg rounded-lg p-6 mx-auto w-7/10">
+      <h1 className="text-2xl font-bold mb-4">Movie Upload</h1>
+      <div className="mb-4">
+        <label htmlFor="video-upload" className="block mb-2 font-medium">
+          Select a video file:
+        </label>
+        <input
+          type="file"
+          id="video-upload"
+          accept="video/*"
+          onChange={handleFileChange}
+          className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+      <button
+        onClick={handleUpload}
+        className="px-4 py-2 font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 border-2"
+      >
+        Upload
+      </button>
       {videoURL && (
-        <div>
-          <h2>ビデオプレビュー</h2>
-          <video controls src={videoURL} width="320" />
+        <div className="mt-6">
+          <h2 className="text-xl font-bold mb-2">Video Preview</h2>
+          <div className="rounded-md overflow-hidden shadow-md">
+            <video controls src={videoURL} width="320" />
+          </div>
         </div>
       )}
     </div>
   );
 };
+
+
 
 export default Movie;
