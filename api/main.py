@@ -1,13 +1,26 @@
 from typing import Union
 import os
 from fastapi import FastAPI, File, UploadFile
-
+from fastapi.middleware.cors import CORSMiddleware
 from prisma import Prisma
 # 新しく追加したライブラリ。requirement.txtに追加する必要あり
 from datetime import datetime, timedelta
 import uuid
 
 app = FastAPI()
+
+origins = [
+    "http://localhost",
+    "http://localhost:3002",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def read_root():
