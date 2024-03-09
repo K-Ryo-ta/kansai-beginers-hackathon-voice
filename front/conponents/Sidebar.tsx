@@ -1,8 +1,30 @@
+'use client'
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { Button } from "@/components/ui/button";
 import Movie from './Movie';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { Slider } from '@/components/ui/slider';
+import { cn } from "@/lib/utils"
+import MyComponent from '../components/ui/CustomSlider';
+import ParentComponent from './ParentSlider';
+import ParentArray from './ParentArray';
+import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog';
+
+
+type SidebarProps = {
+  // 他のプロパティを定義
+  className?: string; // className をオプショナルプロパティとして追加
+  // ...
+};
 
 
 const Sidebar = () => {
@@ -10,15 +32,15 @@ const Sidebar = () => {
 const ScreenPath = "/profile"
 
   return (
-    <div className='border h-[70vh] w-[10vh] mt-auto mb-auto'>
+    <div className='inline-flex flex-col border h-[70vh] w-[10vh] mt-{20vh} w-7/10'>
       
     
     <Link href={ScreenPath} passHref className="background-color: rgb(100 116 139)">
-        <img src="/images/profile.svg" className='h-[7vh]'/>
+        <img src="/images/myReport.svg" className='h-[10vh]'/>
     </Link>
-    
+    {/* ドロワーのとこ */}
       <Drawer>
-      <DrawerTrigger><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="black"/></svg>
+      <DrawerTrigger><img src='/images/addMovie.svg' className='h-[10vh]'></img>
 </DrawerTrigger>
         <DrawerContent>
          <DrawerHeader>
@@ -34,8 +56,71 @@ const ScreenPath = "/profile"
         </DrawerFooter>
         </DrawerContent>
       </Drawer>
-
-
+    {/* シートのやつ */}
+      {/* <Sheet>
+     <SheetTrigger> <img src="/images/Scoring.svg" className='h-[7vh]'/></SheetTrigger>
+      <SheetContent>
+       <SheetHeader>
+       <SheetTitle>あなたの思うような点数を</SheetTitle>
+         <SheetDescription>
+         Fit  
+         </SheetDescription>
+         < MyComponent label="fit" onSliderChange={function (value: number): void {
+              throw new Error('Function not implemented.');
+            } }/>
+         <SheetDescription>
+         Creativity
+         </SheetDescription>
+         < MyComponent label="Creativity" onSliderChange={function (value: number): void {
+              throw new Error('Function not implemented.');
+            } }/>
+         <SheetDescription>
+         Comprehensibility
+         </SheetDescription>
+         < MyComponent label="Comprehensivility" onSliderChange={function (value: number): void {
+              throw new Error('Function not implemented.');
+            } }/>
+         <SheetDescription>
+         Moved 
+         </SheetDescription>
+         < MyComponent label="Moved" onSliderChange={function (value: number): void {
+              throw new Error('Function not implemented.');
+            } }/>
+         <SheetDescription>
+         Editing
+         </SheetDescription>
+         < MyComponent label="Editing" onSliderChange={function (value: number): void {
+              throw new Error('Function not implemented.');
+            } }/>
+         </SheetHeader>
+       </SheetContent>
+    </Sheet> */}
+           <Sheet>
+     <SheetTrigger> <img src="/images/Scoring.svg" className='h-[10vh]'/></SheetTrigger>
+      <SheetContent>
+       <SheetHeader>
+       <SheetTitle>evaluation</SheetTitle>
+       </SheetHeader>
+       <ParentArray />
+       <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="outline">Show Dialog</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>注意※一つの動画につき採点を送れるのは1度だけです</AlertDialogTitle>
+          <AlertDialogDescription>
+            本当に採点情報を送りますか？
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction>Send</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+       </SheetContent>
+    </Sheet>
     
  </div>
   )

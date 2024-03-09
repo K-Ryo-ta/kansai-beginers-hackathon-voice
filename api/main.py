@@ -2,6 +2,8 @@ from typing import Union
 import os
 from fastapi import FastAPI, File, UploadFile,Response, Depends  
 from fastapi.responses import FileResponse
+from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from prisma import Prisma
 # 新しく追加したライブラリ。requirement.txtに追加する必要あり
 from datetime import datetime, timedelta
@@ -13,6 +15,20 @@ from fastapi_sessions.frontends.implementations import SessionCookie, CookiePara
 
 app = FastAPI()
 
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class Theme(BaseModel):
     title: str
@@ -129,6 +145,7 @@ async def get_video_description(id:str):
 @app.get("/video/{filename}")
 async def get_video(filename:str):
     return FileResponse(f"uploads/{filename}")
+
 
 #動画を削除する
 @app.delete("/video/{filename}")
