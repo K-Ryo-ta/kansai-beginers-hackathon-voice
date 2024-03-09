@@ -2,6 +2,7 @@ import React from 'react'
 import { Payment, columns } from "../payments/columns"
 import { DataTable } from "../payments/data-tables"
 
+
 async function getData(): Promise<Payment[]> {
     // Fetch data from your API here.
     return [
@@ -49,8 +50,7 @@ async function page() {
 
     return (
         <div className="container mx-auto py-10">
-            <DataTable columns={columns} data={data} />
-
+            <DataTable<Payment, unknown> columns={columns} data={data} />
         </div>
     )
 }
