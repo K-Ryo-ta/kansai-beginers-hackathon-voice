@@ -1,6 +1,6 @@
 from typing import Union
-
-from fastapi import FastAPI
+import os
+from fastapi import FastAPI, File, UploadFile
 
 from prisma import Prisma
 # 新しく追加したライブラリ。requirement.txtに追加する必要あり
@@ -106,3 +106,44 @@ async def read_root():
 @app.get("/")
 async def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
+
+#動画をアップロード
+@app.post("/video")
+async def create_upload_file(input: UploadFile):
+    os.makedirs("uploads", exist_ok=True)
+    with open(f"uploads/{input.filename}", "wb") as buffer:
+        buffer.write(input.file.read())
+    return {"filename": input.filename}
+
+#動画を表示する
+@app.get("/video/{filename}")
+async def get_video(filename:str):
+    return FileResPonse(f"uploads/{filename}")
+
+#動画を削除する
+@app.delete("/video/{filename}")
+async def delete_video(filename:str):
+    #指定されたファイルを消す
+    os.remove("/upload/{filename}")
+    return {"message": f"{filename} deleted"}
+
+@app.post("/test")
+async def create_upload_file(input: UploadFile):
+    os.makedirs("uploads", exist_ok=True)
+    with open(f"uploads/{input.filename}", "wb") as buffer:
+        buffer.write(input.file.read())
+    
+    video = await prisma.video.create(
+            data={
+                'title': input.filename,
+                'description': 'テスト',
+                'url': '一旦パス',
+                'thumbnail': 'konitiwa',
+                'user': {
+                    'connect': {'id': user.id}
+                },
+                'theme': {
+                    'connect': {'id': theme.id}
+                },
+    })
+    return {"filename": input.filename}
