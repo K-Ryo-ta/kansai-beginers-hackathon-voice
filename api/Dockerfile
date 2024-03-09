@@ -9,7 +9,6 @@ COPY requirements.txt .
 
 # 依存パッケージのインストール
 RUN pip install --no-cache-dir -r requirements.txt
-
 # アプリケーションのコードをコピー
 # COPY . .
 # ポートの公開
