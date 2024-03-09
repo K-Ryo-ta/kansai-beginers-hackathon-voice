@@ -6,6 +6,7 @@ from prisma import Prisma
 # 新しく追加したライブラリ。requirement.txtに追加する必要あり
 from datetime import datetime, timedelta
 import uuid
+from pydantic import Basemodel
 
 app = FastAPI()
 
@@ -115,7 +116,6 @@ async def read_root():
     # "QQQ":"aaa"
 }
 
-
 @app.get("/")
 async def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
@@ -160,3 +160,4 @@ async def create_upload_file(input: UploadFile):
                 },
     })
     return {"filename": input.filename}
+
