@@ -2,7 +2,19 @@ import Sidebar from '@/conponents/Sidebar';
 import Viewer from '@/conponents/Viewer';
 import React from 'react'
 
-const page = () => {
+async function getData() {
+    const res = await fetch('http://127.0.0.1:8000/video/video1.mp4')
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch data')
+    }
+    return res.json()
+}
+
+const page = async () => {
+
+    const data = await getData()
+    console.log(data)
     const videoUrls = [
         'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
         'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
