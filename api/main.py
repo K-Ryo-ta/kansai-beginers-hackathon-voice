@@ -133,7 +133,26 @@ async def create_upload_file(input: UploadFile):
         buffer.write(input.file.read())
     return {"filename": input.filename}
 
-
+# 動画の説明やタイトルをほぞんする
+@app.post("/video/description")
+async def create_video_description(input: VideoDescription):
+    db = Prisma()
+    await db.connect()
+    video = await db.video.create(
+        data = {
+            'title': input.title,
+            'description': input.description,
+            'url': input.url,
+            'thumbnail': input.thumbnail,
+            'user': {
+                'connect': {'id': input.user_id}
+            },
+            'theme': {
+                'connect': {'id': input.theme_id}
+            },
+        })
+    await db.disconnect()
+    return 
 
 # 動画のせつめいをとる
 @app.get("/video/description/{video_id}")
