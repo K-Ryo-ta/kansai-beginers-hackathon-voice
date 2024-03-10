@@ -67,6 +67,8 @@ class Evaluation(BaseModel):
     moved: int
     editing: int
 
+
+    
 @app.post("/resister")
 async def create_user(user: User):
     db = Prisma()
@@ -82,9 +84,26 @@ async def create_user(user: User):
     return {f"Hello{user.name}"}
 
 
-
                                                                       
+# テーマを送る
+@app.post("/theme/send")
+async def create_send_theme(theme: Theme):
+    db = Prisma()
+    await db.connect()
+    theme = await db.theme.create(
+        data={
+            'title': theme.title,
+            'description': theme.description,
+            'startDate': theme.startDate,
+            'endDate': theme.endDate
+        }
+    )
+    print(theme)
+    await db.disconnect()
+    return theme
 
+
+# テーマを表示させる
 @app.get("/theme/{theme_id}")
 async def get_theme(theme_id: str):
     db = Prisma()
@@ -163,7 +182,7 @@ async def get_video():
 #     os.remove("/upload/{filename}")
 #     return {"message": f"{filename} deleted"}
 
-
+# ログイン機能
 @app.get("/login")
 async def login(login: Login):
     db = Prisma()
