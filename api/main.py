@@ -59,12 +59,8 @@ class User(BaseModel):
 
 
 class Evaluation(BaseModel):
-    user: User   #評価したユーザー
     userId: str
-    video: Video  #評価された動画(これから評価されたユーザーを探す)
     videoId: str
-    host_userId: str
-    hosvideoId: str
     fit: int
     creativity: int
     comprehensibility: int
@@ -134,7 +130,27 @@ async def create_upload_file(input: UploadFile):
     return {"filename": input.filename}
 
 
-
+# 動画の説明やタイトルをほぞんする
+@app.post("/video/description")
+async def create_video_description(input: VideoDescription):
+    db = Prisma()
+    await db.connect()
+    video = await db.video.create(
+        data = {
+            'title': input.title,
+            'description': input.description,
+            'url': input.url,
+            'thumbnail': input.thumbnail,
+            'user': {
+                'connect': {'id': input.user_id}
+            },
+            'theme': {
+                'connect': {'id': input.theme_id}
+            },
+        })
+    await db.disconnect()
+    return video
+    
 # 動画のせつめいをとる
 @app.get("/video/description/{video_id}")
 async def get_video_description(id:str):
@@ -142,7 +158,7 @@ async def get_video_description(id:str):
     await db.connect()
     video = await db.video.find_first(where={"id": id})
     await db.disconnect()
-    return 
+    return video
     
 #指定した動画を表示する
 @app.get("/video/{filename}")
@@ -180,50 +196,35 @@ async def login(login: Login):
 
 
 
-
-@app.post("/evaluate/{video_id}")
+@app.post("/evaluate/send/{video_id}")
 async def create_evaluate(evaluation: Evaluation):
     db = Prisma()
     await db.connect()
-    evalation = await db.evaluation.create(
+    eva = await db.evaluation.create(
         data={
-            userId: evaluate.userId,
-            videoId: evaluate.videoId,
-            fit: evaluate.fit,
-            creativity: evaluate.creativity,
-            comprehensibility: evaluate.comprehensibility,
-            moved: evaluate.moved,
-            editing: evaluate.editing
+            #評価したユーザー
+            'user': {
+                'connect': {'id': evaluation.userId}
+            },
+            #評価された動画(これから評価されたユーザーを探す)
+            "video": {
+                'connect': {'id': evaluation.videoId}
+            },
+            "fit": evaluation.fit,
+            "creativity": evaluation.creativity,
+            "comprehensibility": evaluation.comprehensibility,
+            "moved": evaluation.moved,
+            "editing": evaluation.editing
         }
     )
     await db.disconnect()
+    return eva
 
-# 動画に評価(Evaluation)機能を実装したい
-# ブラウザ側で点数をつけるバーがある(スライドすると1-100の値を入れることができる)
-# 項目が5つあって、配列[20, 30, 40, 50, 60]などで受け取る予定
-# ある人が動画に点数をつける(評価する)→評価した点数をデータベース(dev.db)に保存する
-# また他の人が動画に点数をつける(評価する)→点数をデータベース(dev.db)に保存する
-# 最終的に、評価した人全員の点数を、平均値(合計の点数 / 評価した人数)としてブラウザ画面に表示させたい
-class Evaluation(BaseModel):
-    fit: int
-    creativity: int
-    comprehensibility: int
-    moved: int
-    editing: int
 
-# 動画を評価する
-@app.post("/evaluation")
-async def create_evaluation():
+@app.get("/evaluate/caluculate/{video_id}")
+async def get_evaluate(video_id: str):
     db = Prisma()
     await db.connect()
-    
-    return
-
-# 評価した点数を表示させる
-@app.get("/evaluation/{evaluation_id}")
-async def evaluation(input: Evaluation):
-    db = Prisma()
-    await db.connect()
-    
-    return 
-
+    evaluations = await db.evaluation.find_many(where={"videoId": video_id})
+    await db.disconnect()
+    return evaluations
