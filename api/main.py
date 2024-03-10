@@ -59,12 +59,8 @@ class User(BaseModel):
 
 
 class Evaluation(BaseModel):
-    user: User   #評価したユーザー
     userId: str
-    video: Video  #評価された動画(これから評価されたユーザーを探す)
     videoId: str
-    host_userId: str
-    hosvideoId: str
     fit: int
     creativity: int
     comprehensibility: int
@@ -182,19 +178,35 @@ async def login(login: Login):
 
 
 
-@app.post("/evaluate/{video_id}")
+@app.post("/evaluate/send/{video_id}")
 async def create_evaluate(evaluation: Evaluation):
     db = Prisma()
     await db.connect()
-    evalation = await db.evaluation.create(
+    eva = await db.evaluation.create(
         data={
-            userId: evaluate.userId,
-            videoId: evaluate.videoId,
-            fit: evaluate.fit,
-            creativity: evaluate.creativity,
-            comprehensibility: evaluate.comprehensibility,
-            moved: evaluate.moved,
-            editing: evaluate.editing
+            #評価したユーザー
+            'user': {
+                'connect': {'id': evaluation.userId}
+            },
+            #評価された動画(これから評価されたユーザーを探す)
+            "video": {
+                'connect': {'id': evaluation.videoId}
+            },
+            "fit": evaluation.fit,
+            "creativity": evaluation.creativity,
+            "comprehensibility": evaluation.comprehensibility,
+            "moved": evaluation.moved,
+            "editing": evaluation.editing
         }
     )
     await db.disconnect()
+    return eva
+
+
+@app.get("/evaluate/caluculate/{video_id}")
+async def get_evaluate(video_id: str):
+    db = Prisma()
+    await db.connect()
+    evaluations = await db.evaluation.find_many(where={"videoId": video_id})
+    await db.disconnect()
+    return evaluations
