@@ -3,7 +3,9 @@ import Viewer from '@/conponents/Viewer';
 import React from 'react'
 
 async function getData() {
-    const res = await fetch('http://127.0.0.1:8000/video/video1.mp4')
+    const res = await fetch('http://127.0.0.1:8000/video', {
+        method: 'GET',
+    })
 
     if (!res.ok) {
         throw new Error('Failed to fetch data')
