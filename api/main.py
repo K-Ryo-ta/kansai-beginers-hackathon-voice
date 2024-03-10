@@ -56,6 +56,22 @@ class User(BaseModel):
     email: str
     password: str
     name: str
+
+
+class Evaluation(BaseModel):
+    user: User   #評価したユーザー
+    userId: str
+    video: Video  #評価された動画(これから評価されたユーザーを探す)
+    videoId: str
+    host_userId: str
+    hosvideoId: str
+    fit: int
+    creativity: int
+    comprehensibility: int
+    moved: int
+    editing: int
+
+
     
 @app.post("/resister")
 async def create_user(user: User):
@@ -72,6 +88,7 @@ async def create_user(user: User):
     return {f"Hello{user.name}"}
 
 
+                                                                      
 # テーマを送る
 @app.post("/theme/send")
 async def create_send_theme(theme: Theme):
@@ -88,6 +105,7 @@ async def create_send_theme(theme: Theme):
     print(theme)
     await db.disconnect()
     return theme
+
 
 # テーマを表示させる
 @app.get("/theme/{theme_id}")
@@ -181,6 +199,26 @@ async def login(login: Login):
     else:
         return "fail"
 
+
+
+
+@app.post("/evaluate/{video_id}")
+async def create_evaluate(evaluation: Evaluation):
+    db = Prisma()
+    await db.connect()
+    evalation = await db.evaluation.create(
+        data={
+            userId: evaluate.userId,
+            videoId: evaluate.videoId,
+            fit: evaluate.fit,
+            creativity: evaluate.creativity,
+            comprehensibility: evaluate.comprehensibility,
+            moved: evaluate.moved,
+            editing: evaluate.editing
+        }
+    )
+    await db.disconnect()
+
 # 動画に評価(Evaluation)機能を実装したい
 # ブラウザ側で点数をつけるバーがある(スライドすると1-100の値を入れることができる)
 # 項目が5つあって、配列[20, 30, 40, 50, 60]などで受け取る予定
@@ -209,3 +247,4 @@ async def evaluation(input: Evaluation):
     await db.connect()
     
     return 
+
