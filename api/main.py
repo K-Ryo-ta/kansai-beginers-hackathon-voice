@@ -83,6 +83,16 @@ async def create_user(user: User):
     await db.disconnect()
     return {f"Hello{user.name}"}
 
+#ユーザ情報漏洩
+@app.get("/user")
+async def get_user():
+    db = Prisma()
+    await db.connect()
+    users = await db.user.find_many()
+    await db.disconnect()
+    return users
+
+
 
                                                                       
 # テーマを送る
@@ -231,14 +241,11 @@ async def get_evaluate(input: str):#inputにはevaluationのvideoIdを入れる
     db = Prisma()
     await db.connect()
     certain_video_evaluations = await db.evaluation.find_many(where={"videoId": input})
+    await db.disconnect()
     evaluation_fit = sum(evaluations.fit) / len(evaluations.fit)
     evaluation_creativity = sum(evaluations.creativity) / len(evaluations.creativity)
     evaluation_comprehensibility = sum(evaluations.comprehensibility) / len(evaluations.comprehensibility)
     evaluation_moved = sum(evaluations.moved) / len(evaluations.moved)
     evaluation_editing = sum(evaluations.editing) / len(evaluations.editing)
     evaluations = [evaluation_fit, evaluation_creativity, evaluation_comprehensibility, evaluation_moved, evaluation_editing]
-    return evaluations
-  
-
-    await db.disconnect()
     return evaluations
