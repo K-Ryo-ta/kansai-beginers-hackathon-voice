@@ -53,7 +53,7 @@ class User(BaseModel):
     email: str
     password: str
     name: str
-
+    
 @app.post("/resister")
 async def create_user(user: User):
     db = Prisma()
@@ -69,7 +69,7 @@ async def create_user(user: User):
     return {f"Hello{user.name}"}
 
 
-
+# テーマを送る
 @app.post("/theme/send")
 async def create_send_theme(theme: Theme):
     db = Prisma()
@@ -85,6 +85,7 @@ async def create_send_theme(theme: Theme):
     await db.disconnect()
     return theme
 
+# テーマを表示させる
 @app.get("/theme/{theme_id}")
 async def get_theme(theme_id: str):
     db = Prisma()
@@ -155,7 +156,7 @@ async def delete_video(filename:str):
     os.remove("/upload/{filename}")
     return {"message": f"{filename} deleted"}
 
-
+# ログイン機能
 @app.get("/login")
 async def login(login: Login):
     db = Prisma()
@@ -167,3 +168,32 @@ async def login(login: Login):
         return "OK"
     else:
         return "fail"
+
+# 動画に評価(Evaluation)機能を実装したい
+# ブラウザ側で点数をつけるバーがある(スライドすると1-100の値を入れることができる)
+# 項目が5つあって、配列[20, 30, 40, 50, 60]などで受け取る予定
+# ある人が動画に点数をつける(評価する)→評価した点数をデータベース(dev.db)に保存する
+# また他の人が動画に点数をつける(評価する)→点数をデータベース(dev.db)に保存する
+# 最終的に、評価した人全員の点数を、平均値(合計の点数 / 評価した人数)としてブラウザ画面に表示させたい
+class Evaluation(BaseModel):
+    fit: int
+    creativity: int
+    comprehensibility: int
+    moved: int
+    editing: int
+
+# 動画を評価する
+@app.post("/evaluation")
+async def create_evaluation():
+    db = Prisma()
+    await db.connect()
+    
+    return
+
+# 評価した点数を表示させる
+@app.get("/evaluation/{evaluation_id}")
+async def evaluation(input: Evaluation):
+    db = Prisma()
+    await db.connect()
+    
+    return 
