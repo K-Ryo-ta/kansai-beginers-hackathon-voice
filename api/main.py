@@ -180,11 +180,6 @@ async def get_all_video():
     return videos
 
 
-    video_files = [f for f in os.listdir("uploads") if f.endswith((".mp4", ".avi", ".mov"))]
-    video_paths = [f"uploads/{filename}" for filename in video_files]
-    return video_paths
-    return videos
-
 # #動画を削除する
 # @app.delete("/video/{filename}")
 # async def delete_video(filename:str):
@@ -233,9 +228,18 @@ async def create_evaluate(evaluation: Evaluation):
 
 
 @app.get("/evaluate/caluculate/{video_id}")
-async def get_evaluate(video_id: str):
+async def get_evaluate(input: str):#inputにはevaluationのvideoIdを入れる
     db = Prisma()
     await db.connect()
-    evaluations = await db.evaluation.find_many(where={"videoId": video_id})
+    certain_video_evaluations = await db.evaluation.find_many(where={"videoId": input})
+    evaluation_fit = sum(evaluations.fit) / len(evaluations.fit)
+    evaluation_creativity = sum(evaluations.creativity) / len(evaluations.creativity)
+    evaluation_comprehensibility = sum(evaluations.comprehensibility) / len(evaluations.comprehensibility)
+    evaluation_moved = sum(evaluations.moved) / len(evaluations.moved)
+    evaluation_editing = sum(evaluations.editing) / len(evaluations.editing)
+    evaluations = [evaluation_fit, evaluation_creativity, evaluation_comprehensibility, evaluation_moved, evaluation_editing]
+    return evaluations
+  
+
     await db.disconnect()
     return evaluations
