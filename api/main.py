@@ -108,6 +108,7 @@ async def create_send_theme(theme: Theme):
 async def get_theme(theme_id: str):
     db = Prisma()
     await db.connect()
+    random_id = random.choice(ids) if ids else None
     theme = await db.theme.find_unique(where={"id": theme_id})
     await db.disconnect()
     return theme
@@ -140,7 +141,7 @@ async def create_video_description(input: VideoDescription):
         data = {
             'title': input.title,
             'description': input.description,
-            'url': input.url,
+            'url': input.url,#ファイル名
             'thumbnail': input.thumbnail,
             'user': {
                 'connect': {'id': input.user_id}
@@ -166,13 +167,22 @@ async def get_video_description(id:str):
 async def get_video(filename:str):
     return FileResponse(f"uploads/{filename}")
 
+    video_files = [f for f in os.listdir("uploads") if f.endswith(".mp4")]
+    return video_files
+
 #保存してある動画の全てを取る
 @app.get("/video")
-async def get_video():
+async def get_all_video():
     db = Prisma()
     await db.connect()
     videos = await db.video.find_many()
     await db.disconnect()
+    return videos
+
+
+    video_files = [f for f in os.listdir("uploads") if f.endswith((".mp4", ".avi", ".mov"))]
+    video_paths = [f"uploads/{filename}" for filename in video_files]
+    return video_paths
     return videos
 
 # #動画を削除する
