@@ -131,7 +131,7 @@ async def create_video_description(input: VideoDescription):
             },
         })
     await db.disconnect()
-    return 
+    return video
     
 # 動画のせつめいをとる
 @app.get("/video/description/{video_id}")
@@ -140,7 +140,7 @@ async def get_video_description(id:str):
     await db.connect()
     video = await db.video.find_first(where={"id": id})
     await db.disconnect()
-    return 
+    return video
     
 #指定した動画を表示する
 @app.get("/video/{filename}")
