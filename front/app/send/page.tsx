@@ -15,21 +15,38 @@ import { Label } from "@/components/ui/label"
 
 
 
+
+
 const page = () => {
     const [theme, setTheme] = useState<string | null>(null);
+    const [description, setDescription] = useState<string | null>(null);
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setendDate] = useState<Date | null>(null);
 
     async function onSubmit() {
-        if (!theme) {
-            return
+        if (!theme || !description || !startDate || !endDate) {
+            console.log('Missing fields');
+            return;
         }
-        const formData = new FormData()
-        formData.append("input", theme)
-        const response = await fetch('http://127.0.0.1:8000/theme', {
-            method: 'POST',
-            body: formData
-        })
-        const data = await response.json()
-        console.log(data)
+
+        const payload = {
+            title: theme,
+            description: description,
+            startDate: startDate.toISOString(), // startDateがDateオブジェクトであることを前提としています
+            endDate: endDate.toISOString(), // endDateがDateオブジェクトであることを前提としています
+        };
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/theme/send', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+            const res = await response.json();
+            console.log(res);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     const handleThemeChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +54,20 @@ const page = () => {
         setTheme(event.target.value);
     };
 
+    const handleDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
+        console.log("event.target.value", event.target.value)
+        setDescription(event.target.value);
+    };
+
+    const handleStartDateChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const newDate = event.target.value ? new Date(event.target.value) : null;
+        setStartDate(newDate);
+    };
+
+    const handleEndDateChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const newDate = event.target.value ? new Date(event.target.value) : null;
+        setendDate(newDate); // 関数名がsetendDateからsetEndDateに修正されるべきです。
+    };
     const handleUpload = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         if (!theme) {
             console.log('themeが選択されていません。');
@@ -60,6 +91,9 @@ const page = () => {
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="Theme">Theme</Label>
                                 <Input id="theme" placeholder="Theme" onChange={handleThemeChange} />
+                                <Input id="description" placeholder="Description" onChange={handleDescriptionChange} />
+                                <Input id="startDate" type="date" placeholder="Start Date" onChange={handleStartDateChange} />
+                                <Input id="endDate" type="date" placeholder="End Date" onChange={handleEndDateChange} />
                             </div>
                         </div>
                     </form>

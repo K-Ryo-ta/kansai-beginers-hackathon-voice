@@ -21,6 +21,9 @@ origins = [
     "http://localhost",
     "http://localhost:8080",
     "http://localhost:3001",
+    "http://localhost:3001/send",
+    "http://localhost:3000/video/uploads",
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
@@ -82,6 +85,7 @@ async def create_send_theme(theme: Theme):
             'endDate': theme.endDate
         }
     )
+    print(theme)
     await db.disconnect()
     return theme
 
