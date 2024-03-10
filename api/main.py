@@ -129,7 +129,6 @@ async def create_upload_file(input: UploadFile):
         buffer.write(input.file.read())
     return {"filename": input.filename}
 
-
 # 動画の説明やタイトルをほぞんする
 @app.post("/video/description")
 async def create_video_description(input: VideoDescription):
@@ -151,6 +150,7 @@ async def create_video_description(input: VideoDescription):
     await db.disconnect()
     return video
     
+
 # 動画のせつめいをとる
 @app.get("/video/description/{video_id}")
 async def get_video_description(id:str):
