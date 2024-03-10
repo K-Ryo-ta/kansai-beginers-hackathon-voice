@@ -1,6 +1,7 @@
 import React from 'react'
 import { Payment, columns } from "../payments/columns"
 import { DataTable } from "../payments/data-tables"
+import { Button } from "@/components/ui/button"
 
 
 async function getData(): Promise<Payment[]> {
@@ -50,6 +51,7 @@ async function page() {
 
     return (
         <div className="container mx-auto py-10">
+            <Button>Login</Button>
             <DataTable<Payment, unknown> columns={columns} data={data} />
         </div>
     )

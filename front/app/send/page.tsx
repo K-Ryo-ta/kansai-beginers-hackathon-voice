@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label"
 
 
 
-const page = () => {
+const Page = () => {
     const [theme, setTheme] = useState<string | null>(null);
     const [description, setDescription] = useState<string | null>(null);
     const [startDate, setStartDate] = useState<Date | null>(null);
@@ -109,4 +109,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

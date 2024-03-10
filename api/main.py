@@ -112,6 +112,14 @@ async def get_theme(theme_id: str):
     await db.disconnect()
     return theme
 
+@app.get("/theme")
+async def get_video():
+    db = Prisma()
+    await db.connect()
+    themes = await db.theme.find_many()
+    await db.disconnect()
+    return themes
+
 
 # サムネイルを保存する
 @app.post("/thumbnail/upload")
@@ -182,14 +190,14 @@ async def get_video():
 #     return {"message": f"{filename} deleted"}
 
 # ログイン機能
-@app.get("/login")
+@app.post("/login")
 async def login(login: Login):
     db = Prisma()
     await db.connect()
-    user = await db.user.find_unique(where={"email" == input.email})
+    user = await db.user.find_unique(where={"email" :login.email})
     correct_password = user.password
 
-    if input.password == correct_password:
+    if login.password == correct_password:
         return "OK"
     else:
         return "fail"
