@@ -88,7 +88,7 @@ async def create_send_theme(theme: Theme):
 async def get_theme(theme_id: str):
     db = Prisma()
     await db.connect()
-    theme = await db.theme.find_first(where={"id": theme_id})
+    theme = await db.theme.find_unique(where={"id": theme_id})
     await db.disconnect()
     return theme
 
@@ -133,7 +133,7 @@ async def create_video_description(input: VideoDescription):
     return 
     
 # 動画のせつめいをとる
-@app.get("/video/description/{id}")
+@app.get("/video/description/{video_id}")
 async def get_video_description(id:str):
     db = Prisma()
     await db.connect()
@@ -141,18 +141,26 @@ async def get_video_description(id:str):
     await db.disconnect()
     return 
     
-#動画を表示する
+#指定した動画を表示する
 @app.get("/video/{filename}")
 async def get_video(filename:str):
     return FileResponse(f"uploads/{filename}")
 
+#保存してある動画の全てを取る
+@app.get("/video")
+async def get_video():
+    db = Prisma()
+    await db.connect()
+    videos = await db.video.find_many()
+    await db.disconnect()
+    return videos
 
-#動画を削除する
-@app.delete("/video/{filename}")
-async def delete_video(filename:str):
-    #指定されたファイルを消す
-    os.remove("/upload/{filename}")
-    return {"message": f"{filename} deleted"}
+# #動画を削除する
+# @app.delete("/video/{filename}")
+# async def delete_video(filename:str):
+#     #指定されたファイルを消す
+#     os.remove("/upload/{filename}")
+#     return {"message": f"{filename} deleted"}
 
 
 @app.get("/login")
