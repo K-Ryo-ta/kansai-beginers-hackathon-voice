@@ -1,6 +1,21 @@
 import React from 'react'
 
-const Header = () => {
+async function getData() {
+    const res = await fetch('http://127.0.0.1:8000/theme', {
+        method: 'GET',
+    })
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch data')
+    }
+    return res.json()
+}
+
+const Header = async () => {
+
+    const data = await getData()
+    console.log(data)
+
     return (
         <div className="navbar bg-base-100 w-[80vw] mx-auto border-2 rounded-full mt-5">
             <div className="navbar-start">

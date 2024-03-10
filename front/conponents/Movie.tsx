@@ -7,11 +7,31 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 // pages/index.tsx
-import { useState, ChangeEvent, FormEvent, MouseEvent } from 'react';
+import { useState, ChangeEvent, FormEvent, MouseEvent, useEffect } from 'react';
+
+async function getData() {
+  const res = await fetch('http://127.0.0.1:8000/theme', {
+    method: 'GET',
+  })
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch data')
+  }
+  return res.json()
+}
 
 const Movie = () => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -20,6 +40,8 @@ const Movie = () => {
   const [description, setDescription] = useState<string | null>(null);
   const [url, setStartDate] = useState<string | null>(null);
   const [thumnail, setendDate] = useState<string | null>(null);
+  const [data, setData] = useState<string[] | null>([]);
+
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files ? event.target.files[0] : null;
@@ -46,8 +68,9 @@ const Movie = () => {
     const data = await response.json()
     console.log(data)
 
-    if (!title || !description || description || thumnail) {
+    if (!title || !description || !description || !thumnail) {
       console.log('Missing fields');
+      console.log("title", title, "description", description, "url", url, "thumnail", thumnail)
       return;
     }
 
@@ -55,7 +78,9 @@ const Movie = () => {
       title: title,
       description: description,
       url: url, // startDateがDateオブジェクトであることを前提としています
-      thumnail: thumnail, // endDateがDateオブジェクトであることを前提としています
+      thumbnail: thumnail, // endDateがDateオブジェクトであることを前提としています
+      theme_id: data.id,
+      // theme_idをペイロードに追加する
     };
 
     try {
@@ -106,63 +131,20 @@ const Movie = () => {
     setendDate(event.target.value); // 関数名がsetendDateからsetEndDateに修正されるべきです。
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const fetchedData = await getData();
+        setData(fetchedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    // <div>
-    //   <div className="border shadow-lg rounded-lg p-6 mx-auto w-7/10">
-    //     <h1 className="text-2xl font-bold mb-4">Movie Upload</h1>
-    //     <div className="mb-4">
-    //       <label htmlFor="video-upload" className="block mb-2 font-medium">
-    //         Select a video file:
-    //       </label>
-    //       <input
-    //         type="file"
-    //         id="video-upload"
-    //         accept="video/*"
-    //         onChange={handleFileChange}
-    //         className="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-    //       />
-    //     </div>
-    //     <button
-    //       onClick={handleUpload}
-    //       className="px-4 py-2 font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 border-2"
-    //     >
-    //       Upload
-    //     </button>
-    //     {videoURL && (
-    //       <div className="mt-6">
-    //         <h2 className="text-xl font-bold mb-2">Video Preview</h2>
-    //         <div className="rounded-md overflow-hidden shadow-md">
-    //           <video controls src={videoURL} width="320" />
-    //         </div>
-    //       </div>
-    //     )}
-    //   </div>
-    //   <div className='flex justify-center items-center mt-10'>
-    //     <Card className="w-[350px]">
-    //       <CardHeader>
-    //         <CardTitle>Send Video description</CardTitle>
-    //         <CardDescription>Send your video title,description,thumbnail</CardDescription>
-    //       </CardHeader>
-    //       <CardContent>
-    //         <form>
-    //           <div className="grid w-full items-center gap-4">
-    //             <div className="flex flex-col space-y-1.5">
-    //               <Label htmlFor="Video">Video</Label>
-    //               <Input id="video" placeholder="Title" onChange={handleTitleChange} />
-    //               <Input id="description" placeholder="Description" onChange={handleDescriptionChange} />
-    //               <Input id="url"  placeholder="URL" onChange={handleURLChange} />
-    //               <Input id="thumnail" placeholder="Thumnail" onChange={handleThumnailChange} />
-    //             </div>
-    //           </div>
-    //         </form>
-    //       </CardContent>
-    //       <CardFooter className="flex justify-between">
-    //         <Button variant="outline">Cancel</Button>
-    //         <Button onClick={handleUpload}>Send</Button>
-    //       </CardFooter>
-    //     </Card>
-    //   </div>
-    // </div>
     <div>
       <div className="border shadow-lg rounded-lg p-6 mx-auto w-7/10">
         <h1 className="text-2xl font-bold mb-4">Movie Upload</h1>
@@ -196,6 +178,20 @@ const Movie = () => {
                     <Input id="url" onChange={handleURLChange} />
                     <Label htmlFor="thumanail">Thumnail</Label>
                     <Input id="thumnail" onChange={handleThumnailChange} />
+                    <Select>
+                      <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Theme" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {data ? (
+                          data.map((item: any) => (
+                            <SelectItem key={item.id} value={item.id}>
+                              {item.title}
+                            </SelectItem>
+                          ))
+                        ) : null}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </form>
