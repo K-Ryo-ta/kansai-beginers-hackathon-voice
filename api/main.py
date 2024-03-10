@@ -108,6 +108,7 @@ async def create_send_theme(theme: Theme):
 async def get_theme(theme_id: str):
     db = Prisma()
     await db.connect()
+    random_id = random.choice(ids) if ids else None
     theme = await db.theme.find_unique(where={"id": theme_id})
     await db.disconnect()
     return theme
@@ -138,7 +139,7 @@ async def create_video_description(input: VideoDescription):
         data = {
             'title': input.title,
             'description': input.description,
-            'url': input.url,
+            'url': input.url,#ファイル名
             'thumbnail': input.thumbnail,
             'user': {
                 'connect': {'id': input.user_id}
@@ -165,14 +166,18 @@ async def get_video_description(id:str):
 async def get_video(filename:str):
     return FileResponse(f"uploads/{filename}")
 
+    video_files = [f for f in os.listdir("uploads") if f.endswith(".mp4")]
+    return video_files
+
 #保存してある動画の全てを取る
 @app.get("/video")
-async def get_video():
+async def get_all_video():
     db = Prisma()
     await db.connect()
     videos = await db.video.find_many()
     await db.disconnect()
     return videos
+
 
 # #動画を削除する
 # @app.delete("/video/{filename}")
@@ -222,9 +227,18 @@ async def create_evaluate(evaluation: Evaluation):
 
 
 @app.get("/evaluate/caluculate/{video_id}")
-async def get_evaluate(video_id: str):
+async def get_evaluate(input: str):#inputにはevaluationのvideoIdを入れる
     db = Prisma()
     await db.connect()
-    evaluations = await db.evaluation.find_many(where={"videoId": video_id})
+    certain_video_evaluations = await db.evaluation.find_many(where={"videoId": input})
+    evaluation_fit = sum(evaluations.fit) / len(evaluations.fit)
+    evaluation_creativity = sum(evaluations.creativity) / len(evaluations.creativity)
+    evaluation_comprehensibility = sum(evaluations.comprehensibility) / len(evaluations.comprehensibility)
+    evaluation_moved = sum(evaluations.moved) / len(evaluations.moved)
+    evaluation_editing = sum(evaluations.editing) / len(evaluations.editing)
+    evaluations = [evaluation_fit, evaluation_creativity, evaluation_comprehensibility, evaluation_moved, evaluation_editing]
+    return evaluations
+  
+
     await db.disconnect()
     return evaluations
