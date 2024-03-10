@@ -130,7 +130,6 @@ async def create_upload_file(input: UploadFile):
     return {"filename": input.filename}
 
 
-
 # 動画の説明やタイトルをほぞんする
 @app.post("/video/description")
 async def create_video_description(input: VideoDescription):
