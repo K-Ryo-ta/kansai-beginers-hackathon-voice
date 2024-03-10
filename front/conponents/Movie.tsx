@@ -22,6 +22,14 @@ import { Button } from "@/components/ui/button"
 // pages/index.tsx
 import { useState, ChangeEvent, FormEvent, MouseEvent, useEffect } from 'react';
 
+interface Theme {
+  id: string
+  title: string
+  description: string
+  startDate: Date
+  endDate: Date
+}
+
 async function getData() {
   const res = await fetch('http://127.0.0.1:8000/theme', {
     method: 'GET',
@@ -40,7 +48,8 @@ const Movie = () => {
   const [description, setDescription] = useState<string | null>(null);
   const [url, setStartDate] = useState<string | null>(null);
   const [thumnail, setendDate] = useState<string | null>(null);
-  const [data, setData] = useState<string[] | null>([]);
+  const [themedata, setThemeData] = useState<Theme[] | null>([]);
+  const [themeId, setThemeId] = useState<string | null>(null);
 
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +77,7 @@ const Movie = () => {
     const data = await response.json()
     console.log(data)
 
-    if (!title || !description || !description || !thumnail) {
+    if (!title || !description || !description || !thumnail || !themedata || !themeId) {
       console.log('Missing fields');
       console.log("title", title, "description", description, "url", url, "thumnail", thumnail)
       return;
@@ -79,7 +88,8 @@ const Movie = () => {
       description: description,
       url: url, // startDateがDateオブジェクトであることを前提としています
       thumbnail: thumnail, // endDateがDateオブジェクトであることを前提としています
-      theme_id: data.id,
+      theme_id: themeId,
+      user_id: localStorage.getItem('userID'),
       // theme_idをペイロードに追加する
     };
 
@@ -134,8 +144,8 @@ const Movie = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedData = await getData();
-        setData(fetchedData);
+        const fetchedData: Theme[] = await getData();
+        setThemeData(fetchedData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -143,6 +153,11 @@ const Movie = () => {
 
     fetchData();
   }, []);
+
+  const handleThemeIdChange = (value: string) => {
+    console.log(value)
+    setThemeId(value);
+  };
 
   return (
     <div>
@@ -178,17 +193,19 @@ const Movie = () => {
                     <Input id="url" onChange={handleURLChange} />
                     <Label htmlFor="thumanail">Thumnail</Label>
                     <Input id="thumnail" onChange={handleThumnailChange} />
-                    <Select>
+                    <Select onValueChange={handleThemeIdChange}>
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Theme" />
                       </SelectTrigger>
                       <SelectContent>
-                        {data ? (
-                          data.map((item: any) => (
-                            <SelectItem key={item.id} value={item.id}>
-                              {item.title}
-                            </SelectItem>
-                          ))
+                        {themedata ? (
+                          themedata.map((item: Theme) => {
+                            return (
+                              <SelectItem key={item.id} value={item.id}>
+                                {item.title}
+                              </SelectItem>
+                            )
+                          })
                         ) : null}
                       </SelectContent>
                     </Select>

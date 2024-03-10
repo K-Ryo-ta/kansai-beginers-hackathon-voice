@@ -21,13 +21,13 @@ export default async function Home() {
   // const data = await getData()
   // console.log(data)
   return (
-    <main className="flex flex-col h-[80vh] border-t">      
+    <main className="flex flex-col h-[80vh] border-t">
       <div className="flex mx-auto h-[80vh]  ">
         <div className="w-1/6 "></div>
-        <div className = "w-4/6 text-center">
+        <div className="w-4/6 text-center">
           <Viewer />
         </div>
-        <div className = "w-1/6 text-right">
+        <div className="w-1/6 text-right">
           <Sidebar />
         </div>
       </div>
