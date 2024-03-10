@@ -57,6 +57,20 @@ class User(BaseModel):
     password: str
     name: str
 
+
+class Evaluation(BaseModel):
+    user: User   #評価したユーザー
+    userId: str
+    video: Video  #評価された動画(これから評価されたユーザーを探す)
+    videoId: str
+    host_userId: str
+    hosvideoId: str
+    fit: int
+    creativity: int
+    comprehensibility: int
+    moved: int
+    editing: int
+
 @app.post("/resister")
 async def create_user(user: User):
     db = Prisma()
@@ -73,21 +87,7 @@ async def create_user(user: User):
 
 
 
-@app.post("/theme/send")
-async def create_send_theme(theme: Theme):
-    db = Prisma()
-    await db.connect()
-    theme = await db.theme.create(
-        data={
-            'title': theme.title,
-            'description': theme.description,
-            'startDate': theme.startDate,
-            'endDate': theme.endDate
-        }
-    )
-    print(theme)
-    await db.disconnect()
-    return theme
+                                                                      
 
 @app.get("/theme/{theme_id}")
 async def get_theme(theme_id: str):
@@ -179,3 +179,22 @@ async def login(login: Login):
         return "OK"
     else:
         return "fail"
+
+
+
+@app.post("/evaluate/{video_id}")
+async def create_evaluate(evaluation: Evaluation):
+    db = Prisma()
+    await db.connect()
+    evalation = await db.evaluation.create(
+        data={
+            userId: evaluate.userId,
+            videoId: evaluate.videoId,
+            fit: evaluate.fit,
+            creativity: evaluate.creativity,
+            comprehensibility: evaluate.comprehensibility,
+            moved: evaluate.moved,
+            editing: evaluate.editing
+        }
+    )
+    await db.disconnect()
