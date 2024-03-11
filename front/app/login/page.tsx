@@ -8,11 +8,29 @@ import { Checkbox } from '@/components/ui/checkbox';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+interface User {
+    id: string
+    email: string
+    password: string
+    name: string
+    videos: string | null
+    evaluations: string | null
+    createdAt: Date
+    updatedAt: Date
+}
+
+interface Users {
+    user: User[]
+}
+
+
+
 const Page = () => {
 
     const [email, setEmail] = useState<string | null>(null);
     const [password, setPassword] = useState<string | null>(null);
-    const [loginuser, setLoginUser] = useState<string | null>(null);
+    const [loginuser, setLoginUser] = useState<Users | null>(null);
+    const [userID, setUserID] = useState<string | null>(null);
 
     const router = useRouter();
 
@@ -45,12 +63,20 @@ const Page = () => {
             return;
         }
         try {
-            const response = await fetch('http://127.0.0.1:8000/login', {
+            const response = await fetch('http://127.0.0.1:8000/user', {
                 method: 'GET',
             });
-            const res = await response.json();
+            const res: User[] = await response.json();
             console.log(res);
-            setLoginUser(res);
+            res.map((user: User) => {
+                if (user.email == email) {
+                    console.log('ログイン成功');
+                    setUserID(user.id);
+                    localStorage.setItem('userID', user.id);
+                    console.log('userID', userID);
+                    return;
+                }
+            })
         } catch (e) {
             console.log(e);
         }

@@ -11,6 +11,9 @@ const VideoViewer: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]); // 動画リストの状態
   const [currentVideoIndex, setCurrentVideoIndex] = useState<number>(0); // 現在表示中の動画のインデックス
 
+  console.log(localStorage.getItem('userID'))
+
+
   // コンポーネントのマウント時に動画データをフェッチ
   useEffect(() => {
     // DBから動画データを取得するための仮の関数
@@ -34,7 +37,7 @@ const VideoViewer: React.FC = () => {
   };
 
   return (
-    <div className = 'h-[60vh] ml-[20vh]'>
+    <div className='h-[60vh] ml-[20vh]'>
       {videos.length > 0 && (
         <div className='h-[60vh]'>
           <video key={videos[currentVideoIndex].id} controls autoPlay muted className="h-[80vh] mx-auto" >

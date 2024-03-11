@@ -172,10 +172,10 @@ async def create_video_description(input: VideoDescription):
 
 # 動画のせつめいをとる
 @app.get("/video/description/{video_id}")
-async def get_video_description(id:str):
+async def get_video_description(video_id: str):
     db = Prisma()
     await db.connect()
-    video = await db.video.find_first(where={"id": id})
+    video = await db.video.find_first(where={"id": video_id})
     await db.disconnect()
     return video
     
@@ -219,7 +219,7 @@ async def login(login: Login):
 
 
 
-@app.post("/evaluate/send/{video_id}")
+@app.post("/evaluate/send")
 async def create_evaluate(evaluation: Evaluation):
     db = Prisma()
     await db.connect()
@@ -245,15 +245,15 @@ async def create_evaluate(evaluation: Evaluation):
 
 
 @app.get("/evaluate/caluculate/{video_id}")
-async def get_evaluate(input: str):#inputにはevaluationのvideoIdを入れる
+async def get_evaluate(video_id: str):
     db = Prisma()
     await db.connect()
-    certain_video_evaluations = await db.evaluation.find_many(where={"videoId": input})
+    certain_video_evaluations = await db.evaluation.find_many(where={"videoId": video_id})
     await db.disconnect()
-    evaluation_fit = sum(evaluations.fit) / len(evaluations.fit)
-    evaluation_creativity = sum(evaluations.creativity) / len(evaluations.creativity)
-    evaluation_comprehensibility = sum(evaluations.comprehensibility) / len(evaluations.comprehensibility)
-    evaluation_moved = sum(evaluations.moved) / len(evaluations.moved)
-    evaluation_editing = sum(evaluations.editing) / len(evaluations.editing)
+    evaluation_fit = sum(certain_video_evaluations[i].fit for i in range(len(certain_video_evaluations))) / len(certain_video_evaluations)
+    evaluation_creativity = sum(certain_video_evaluations[i].creativity for i in range(len(certain_video_evaluations))) / len(certain_video_evaluations)
+    evaluation_comprehensibility = sum(certain_video_evaluations[i].comprehensibility for i in range(len(certain_video_evaluations))) / len(certain_video_evaluations)
+    evaluation_moved = sum(certain_video_evaluations[i].moved for i in range(len(certain_video_evaluations))) / len(certain_video_evaluations)
+    evaluation_editing = sum(certain_video_evaluations[i].editing for i in range(len(certain_video_evaluations))) / len(certain_video_evaluations)
     evaluations = [evaluation_fit, evaluation_creativity, evaluation_comprehensibility, evaluation_moved, evaluation_editing]
     return evaluations
