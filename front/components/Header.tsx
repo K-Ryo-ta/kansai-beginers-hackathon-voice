@@ -1,20 +1,40 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 
-async function getData() {
-    const res = await fetch('http://127.0.0.1:8000/theme', {
-        method: 'GET',
-    })
-
-    if (!res.ok) {
-        throw new Error('Failed to fetch data')
-    }
-    return res.json()
+interface Theme {
+    id: string
+    title: string
+    description: string
+    startDate: Date
+    endDate: Date
 }
 
-const Header = async () => {
 
-    const data = await getData()
-    console.log(data)
+const Header = () => {
+    const [theme, setTheme] = useState<Theme[]>([]);
+    async function getData() {
+        const res = await fetch('http://127.0.0.1:8000/theme', {
+            method: 'GET',
+        })
+
+        if (!res.ok) {
+            throw new Error('Failed to fetch data')
+        }
+        return res.json()
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const fetchedData = await getData();
+                console.log(fetchedData)
+                setTheme(fetchedData);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+    }, [])
 
     return (
         <div className="navbar bg-base-100 w-[80vw] mx-auto border-2 rounded-full mt-5">
@@ -31,7 +51,7 @@ const Header = async () => {
                 </div>
             </div>
             <div className="navbar-center">
-                <a className="btn btn-ghost text-xl text-center" href='/'>This Week’s theme is ~~~~~~~~~~~~~~</a>
+                <a className="btn btn-ghost text-xl text-center" href='/'>{theme.length > 0 ? `This Week's theme is ${theme[0].title}` : 'Loading...'}</a>
             </div>
             <div className="navbar-end">
                 <a href="/profile" className="btn btn-ghost btn-circle">
