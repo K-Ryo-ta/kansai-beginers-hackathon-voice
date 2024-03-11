@@ -2,3 +2,6 @@
 __pycache__/
 *.py[cod]
 .env
+dev.db
+.DS_Store
+

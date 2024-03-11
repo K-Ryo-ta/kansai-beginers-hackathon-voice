@@ -1,7 +1,7 @@
 datasource db {
     // could be postgresql or mysql
     //TODO:環境変数に変える
-    provider = "mysql"
+    provider = "sqlite"
     url      = env("DATABASE_URL")
 }
 
@@ -60,7 +60,7 @@ model Theme {
 
 model Evaluation {
     id String @id @default(uuid())
-
+   
     user    User   @relation(fields: [userId], references: [id])
     userId  String
     video   Video  @relation(fields: [videoId], references: [id])
